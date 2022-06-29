@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { AuthenticatedRequest } from '../../../../framework/express/types';
+// import { AuthenticatedRequest } from '../../../../framework/express/types';
 import ConversationApplication from '../../application/ConversationApplication';
 import { ConversationRepositoryAddData } from '../../domain/ConversationRepository';
 import { conversationApplication } from '../conversationApplication';

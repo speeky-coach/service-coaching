@@ -1,6 +1,6 @@
 interface DomainEventDTO {
   readonly eventName: string;
-  readonly aggregateId: string;
+  readonly entityId: string;
   readonly eventId: string;
   readonly occurredOn: Date;
 }

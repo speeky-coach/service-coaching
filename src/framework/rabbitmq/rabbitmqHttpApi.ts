@@ -2,7 +2,7 @@ import axios, { AxiosRequestConfig } from 'axios';
 import DomainEventDTO from '../infrastructure/DomainEventDTO';
 
 interface DomainEventQuery {
-  aggregateId: string;
+  entityId: string;
   eventName: string;
 }
 
@@ -32,7 +32,7 @@ const rabbitmqHttpApi = {
     });
 
     const eventDomainMessage = messages.find(
-      (message) => (JSON.parse(message.payload) as DomainEventDTO).aggregateId === query.aggregateId,
+      (message) => (JSON.parse(message.payload) as DomainEventDTO).entityId === query.entityId,
     );
 
     if (!eventDomainMessage) return null;
