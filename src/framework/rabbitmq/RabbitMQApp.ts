@@ -1,16 +1,14 @@
 import amqp from 'amqplib';
 import debug from 'debug';
+import DomainEventDTO from '../infrastructure/DomainEventDTO';
+import RabbitMQSubscriber from './RabbitMQSubscriber';
 
 const logger = debug('server:RabbitMQApp');
 
-interface SubscriberPayload {
-  [key: string]: any;
-}
+export type SubscriberCallback = (data: DomainEventDTO) => Promise<void>;
 
-type SubscriberCallback = (data: SubscriberPayload) => Promise<void>;
-
-interface TopicNames {
-  [key: string]: SubscriberCallback[];
+export interface Subscribers {
+  [eventName: string]: SubscriberCallback[];
 }
 
 class RabbitMQApp {
@@ -19,7 +17,7 @@ class RabbitMQApp {
   private exchangeName: string;
   private exchangeType: string;
   private queueName: string;
-  private topicNames: TopicNames;
+  private subscribers: Subscribers;
   private connection: amqp.Connection | null;
   private channel: amqp.Channel | null;
 
@@ -29,19 +27,21 @@ class RabbitMQApp {
     this.exchangeName = exchangeName;
     this.exchangeType = exchangeType;
     this.queueName = queueName;
-    this.topicNames = {};
+    this.subscribers = {};
     this.connection = null;
     this.channel = null;
   }
 
-  public subscribe(topicName: string, callback: SubscriberCallback): void {
-    const _topicName = process.env.TEST_CONTEXT ? 'test.' + topicName : topicName;
+  public addSubscriber(subscriber: RabbitMQSubscriber): void {
+    const eventNames = Object.keys(subscriber.subscribers);
 
-    if (this.topicNames[_topicName]) {
-      this.topicNames[_topicName].push(callback);
-    } else {
-      this.topicNames[_topicName] = [callback];
-    }
+    eventNames.forEach((eventName) => {
+      if (this.subscribers[eventName]) {
+        this.subscribers[eventName] = this.subscribers[eventName].concat(subscriber.subscribers[eventName]);
+      } else {
+        this.subscribers[eventName] = subscriber.subscribers[eventName];
+      }
+    });
   }
 
   public async connect(): Promise<void> {
@@ -60,7 +60,7 @@ class RabbitMQApp {
         durable: true,
       });
 
-      const subscribers = Object.keys(this.topicNames).map((topicName) =>
+      const subscribers = Object.keys(this.subscribers).map((topicName) =>
         this.channel!.bindQueue(this.queueName, this.exchangeName, topicName),
       );
 
@@ -93,8 +93,8 @@ class RabbitMQApp {
 
       logger(`[<= Recieved] ${topicName}:'${payload.content.toString()}'`);
 
-      if (this.topicNames[topicName]) {
-        const callbacks = this.topicNames[topicName].map((callback) => callback(message));
+      if (this.subscribers[topicName]) {
+        const callbacks = this.subscribers[topicName].map((callback) => callback(message));
 
         await Promise.all(callbacks);
 
@@ -111,12 +111,12 @@ class RabbitMQApp {
     }
   }
 
-  public publish(topicName: string, message: SubscriberPayload): void {
+  public publish(topicName: string, message: DomainEventDTO): void {
     this.channel!.publish(this.exchangeName, topicName, Buffer.from(JSON.stringify(message)));
     logger(`[=> Sent] ${topicName}: '${JSON.stringify(message)}'`);
   }
 
-  public publishTest(topicName: string, message: SubscriberPayload): void {
+  public publishTest(topicName: string, message: DomainEventDTO): void {
     this.publish('test.' + topicName, message);
   }
 }

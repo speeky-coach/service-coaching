@@ -11,7 +11,7 @@ class RabbitMQEventBus<D extends DomainEvent, T extends DomainEventDTO> implemen
     const _events = Array.isArray(events) ? events : [events];
 
     _events.forEach((event) => {
-      const result = this.domainEventMapper ? this.domainEventMapper.toDTO(event) : event;
+      const result = this.domainEventMapper ? this.domainEventMapper.toDTO(event) : (event as unknown as T);
 
       rabbitMQApp.publish(event.eventName, result);
     });
