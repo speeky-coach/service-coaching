@@ -29,7 +29,7 @@ export interface Transcription {
 interface Conversation {
   id: ConversationId;
   userId: UserId;
-  audioFileURL?: string;
+  filename: string;
   transcription?: Transcription;
   createdAt: Date;
   updatedAt?: Date;

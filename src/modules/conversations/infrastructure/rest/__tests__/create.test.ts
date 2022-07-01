@@ -1,7 +1,7 @@
 import request from 'supertest';
 import { v4 as uuid } from 'uuid';
 import { expressApp } from '../../../../../app/server';
-import ExpressDTOPresenter from '../../../../../framework/express/ExpressDTOPresenter';
+import ExpressPresenter from '../../../../../framework/express/ExpressPresenter';
 import { mongodbApp } from '../../../../../framework/mongodb/MongodbApp';
 import { rabbitMQApp } from '../../../../../framework/rabbitmq/RabbitMQApp';
 import Conversation from '../../../domain/Conversation';
@@ -28,7 +28,7 @@ describe('POST /conversations', () => {
     });
 
     /* Then */
-    expect(response.status).toEqual(ExpressDTOPresenter.RETURN_NEW_ENTITY_HTTP_STATUS_CODE);
+    expect(response.status).toEqual(ExpressPresenter.NEW_ENTITY_HTTP_STATUS_CODE);
     expect((response.body as Conversation).userId).toEqual(userId);
 
     const conversationDb = await conversationRepositoryAdapter.findByTestId(testId);

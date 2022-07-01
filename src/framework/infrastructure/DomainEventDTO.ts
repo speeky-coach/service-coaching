@@ -1,4 +1,5 @@
 interface DomainEventDTO {
+  data: object;
   readonly eventName: string;
   readonly entityId: string;
   readonly eventId: string;

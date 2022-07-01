@@ -1,17 +1,23 @@
 import DomainEvent from '../domain/bus/DomainEvent';
 import EventBus from '../domain/bus/EventBus';
 import { rabbitMQApp } from './RabbitMQApp';
-import DomainEventDTOMapper from '../infrastructure/DomainEventDTOMapper';
+import DomainEventMapper from '../infrastructure/DomainEventMapper';
 import DomainEventDTO from '../infrastructure/DomainEventDTO';
 
 class RabbitMQEventBus<D extends DomainEvent, T extends DomainEventDTO> implements EventBus {
-  constructor(private domainEventMapper: DomainEventDTOMapper<D, T>) {}
+  constructor(private domainEventMapper?: DomainEventMapper<D, T>) {}
 
-  async publish(events: D[]): Promise<void> {
-    events.forEach((event) => {
-      rabbitMQApp.publish(event.eventName, this.domainEventMapper.toDTO(event));
+  async publish(events: D | D[]): Promise<void> {
+    const _events = Array.isArray(events) ? events : [events];
+
+    _events.forEach((event) => {
+      const result = this.domainEventMapper ? this.domainEventMapper.toDTO(event) : event;
+
+      rabbitMQApp.publish(event.eventName, result);
     });
   }
 }
+
+export const rabbitMQEventBus = new RabbitMQEventBus();
 
 export default RabbitMQEventBus;

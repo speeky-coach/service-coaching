@@ -1,42 +1,46 @@
 import AggregateRoot from '../domain/entities/AggregateRoot';
 import Presenter from '../domain/Presenter';
-import DTOMapper from '../infrastructure/DTOMapper';
-import DTO from '../infrastructure/DTO';
+import EntityMapper from '../infrastructure/EntityMapper';
+import EntityDTO from '../infrastructure/EntityDTO';
 import { Response } from 'express';
 
-class ExpressPresenter<D extends AggregateRoot, T extends DTO> implements Presenter<D> {
-  public static RETURN_NEW_ENTITY_HTTP_STATUS_CODE = 201;
-  public static RETURN_ENTITY_HTTP_STATUS_CODE = 200;
-  public static RETURN_LIST_HTTP_STATUS_CODE = 200;
-  public static RETURN_NOT_COMPLETED_ASYNC_PROCESS_HTTP_STATUS_CODE = 202;
-  public static RETURN_EMPTY_HTTP_STATUS_CODE = 204;
+class ExpressPresenter<D extends AggregateRoot, T extends EntityDTO> implements Presenter<D> {
+  public static NEW_ENTITY_HTTP_STATUS_CODE = 201;
+  public static ENTITY_HTTP_STATUS_CODE = 200;
+  public static LIST_HTTP_STATUS_CODE = 200;
+  public static NOT_COMPLETED_ASYNC_PROCESS_HTTP_STATUS_CODE = 202;
+  public static EMPTY_HTTP_STATUS_CODE = 204;
 
-  private dtoMapper: DTOMapper<D, T>;
-  private response: Response | null;
+  private mapper?: EntityMapper<D, T>;
+  private response: Response;
 
-  constructor(dtoMapper: DTOMapper<D, T>) {
-    this.dtoMapper = dtoMapper;
-    this.response = null;
-  }
-
-  public setResponse(response: Response): void {
+  constructor(response: Response, mapper?: EntityMapper<D, T>) {
+    this.mapper = mapper;
     this.response = response;
   }
 
-  returnNewEntity(object: D): void {
-    this.response!.status(ExpressPresenter.RETURN_NEW_ENTITY_HTTP_STATUS_CODE).json(this.dtoMapper.toDTO(object));
+  returnNewEntity(entity: D | object): void {
+    const result = this.mapper ? this.mapper.toDTO(entity as D) : entity;
+
+    this.response.status(ExpressPresenter.NEW_ENTITY_HTTP_STATUS_CODE).json(result);
   }
 
-  returnEntity(object: D): void {
-    this.response!.status(ExpressPresenter.RETURN_ENTITY_HTTP_STATUS_CODE).json(this.dtoMapper.toDTO(object));
+  returnEntity(entity: D | object): void {
+    const result = this.mapper ? this.mapper.toDTO(entity as D) : entity;
+
+    this.response.status(ExpressPresenter.ENTITY_HTTP_STATUS_CODE).json(result);
   }
 
-  /* returnList(objects: D[]): void {
-    this.response!.status(ExpressPresenter.RETURN_LIST_HTTP_STATUS_CODE).json(this.dtoMapper.toDTO(objects));
-  } */
+  returnList(entities: D[] | object[]): void {
+    const _entities = entities.map((entity) => {
+      return this.mapper ? this.mapper.toDTO(entity as D) : entity;
+    });
+
+    this.response.status(ExpressPresenter.LIST_HTTP_STATUS_CODE).json(_entities);
+  }
 
   returnEmpty(): void {
-    this.response!.status(ExpressPresenter.RETURN_EMPTY_HTTP_STATUS_CODE).send();
+    this.response.status(ExpressPresenter.EMPTY_HTTP_STATUS_CODE).send();
   }
 }
 

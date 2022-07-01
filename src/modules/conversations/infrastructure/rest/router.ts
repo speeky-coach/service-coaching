@@ -7,4 +7,6 @@ const router = express.Router();
 
 router.post('/conversations', conversationController.create.bind(conversationController));
 
+router.get('/conversations', conversationController.list.bind(conversationController));
+
 export default router;

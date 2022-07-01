@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from 'express';
 import ConversationApplication from '../../application/ConversationApplication';
 import { ConversationRepositoryAddData } from '../../domain/ConversationRepository';
 import { conversationApplication } from '../conversationApplication';
-import ExpressDTOPresenter from '../../../../framework/express/ExpressDTOPresenter';
+import ExpressPresenter from '../../../../framework/express/ExpressPresenter';
 
 class ConversationController {
   private application: ConversationApplication;
@@ -19,13 +19,26 @@ class ConversationController {
       const data: ConversationRepositoryAddData = {
         // userId: authenticatedRequest.user.id,
         userId: request.body.userId,
+        filename: request.body.filename,
       };
 
       const conversation = await this.application.create(data);
 
-      const presenter = new ExpressDTOPresenter(response);
+      const presenter = new ExpressPresenter(response);
 
       presenter.returnNewEntity(conversation);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async list(request: Request, response: Response, next: NextFunction): Promise<void> {
+    try {
+      const conversations = await this.application.list();
+
+      const presenter = new ExpressPresenter(response);
+
+      presenter.returnList(conversations);
     } catch (error) {
       next(error);
     }

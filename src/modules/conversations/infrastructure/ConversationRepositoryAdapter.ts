@@ -27,6 +27,7 @@ class ConversationRepositoryAdapter implements ConversationRepository {
 
     const conversation: Omit<Conversation, 'id'> = {
       userId: data.userId,
+      filename: data.filename,
       createdAt: now,
     };
 
@@ -44,6 +45,14 @@ class ConversationRepositoryAdapter implements ConversationRepository {
       ...conversation,
       id: conversationId,
     };
+  }
+
+  public async list(): Promise<Conversation[]> {
+    const list = await mongodbApp.getDb().collection<Conversation>('conversations').find().toArray();
+
+    const result = list.map((item) => ({ ...item, id: item._id.toString() }));
+
+    return result as Conversation[];
   }
 }
 

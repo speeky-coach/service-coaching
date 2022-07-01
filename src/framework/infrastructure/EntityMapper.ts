@@ -1,10 +1,10 @@
 import AggregateRoot from '../domain/entities/AggregateRoot';
 import DomainEvent from '../domain/bus/DomainEvent';
-import DTO from './DTO';
+import EntityDTO from './EntityDTO';
 
-interface DTOMapper<D extends AggregateRoot | DomainEvent, T extends DTO> {
+interface EntityMapper<D extends AggregateRoot | DomainEvent, T extends EntityDTO> {
   toDTO(domainEntity: D): T;
   toDomain(dto: T): D;
 }
 
-export default DTOMapper;
+export default EntityMapper;
