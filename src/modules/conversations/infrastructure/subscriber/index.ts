@@ -7,4 +7,9 @@ const conversationSubscriber = new ConversationSubscriber();
 
 subscriber.on('domain_event.storage.audio_uploaded', conversationSubscriber.create.bind(conversationSubscriber));
 
+subscriber.on(
+  'domain_event.speech_recognition.conversation_transcribed',
+  conversationSubscriber.addTranscription.bind(conversationSubscriber),
+);
+
 export default subscriber;

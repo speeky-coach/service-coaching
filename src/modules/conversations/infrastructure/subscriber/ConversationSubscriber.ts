@@ -1,6 +1,7 @@
 import { UserId } from '../../../../framework/domain/types';
 import DomainEventDTO from '../../../../framework/infrastructure/DomainEventDTO';
-import ConversationApplication from '../../application/ConversationApplication';
+import ConversationApplication, { AddTranscriptionData } from '../../application/ConversationApplication';
+import { Transcription } from '../../domain/Conversation';
 import { ConversationRepositoryAddData } from '../../domain/ConversationRepository';
 import { conversationApplication } from '../conversationApplication';
 
@@ -8,6 +9,12 @@ interface AudioUploaded extends DomainEventDTO {
   data: {
     userId: UserId;
     filename: string;
+  };
+}
+
+interface ConversationTranscribed extends DomainEventDTO {
+  data: {
+    transcription: Transcription;
   };
 }
 
@@ -24,7 +31,16 @@ class ConversationSubscriber {
       filename: event.data.filename,
     };
 
-    const conversation = await this.application.create(data);
+    await this.application.create(data);
+  }
+
+  public async addTranscription(event: ConversationTranscribed): Promise<void> {
+    const data: AddTranscriptionData = {
+      conversationId: event.entityId,
+      transcription: event.data.transcription,
+    };
+
+    await this.application.addTranscription(data);
   }
 }
 

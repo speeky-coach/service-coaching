@@ -1,8 +1,13 @@
 import EventBus from '../../../framework/domain/bus/EventBus';
-import Conversation from '../domain/Conversation';
+import { UserId } from '../../../framework/domain/types';
+import Conversation, { Transcription } from '../domain/Conversation';
 import ConversationRepository, { ConversationRepositoryAddData } from '../domain/ConversationRepository';
 import ConversationCreated from '../domain/events/ConversationCreated';
 
+export type AddTranscriptionData = {
+  conversationId: string;
+  transcription: Transcription;
+};
 class ConversationApplication {
   constructor(private conversationRepository: ConversationRepository, private eventBus: EventBus) {}
 
@@ -16,6 +21,14 @@ class ConversationApplication {
 
   public async list(): Promise<Conversation[]> {
     return this.conversationRepository.list();
+  }
+
+  public async addTranscription({ conversationId, transcription }: AddTranscriptionData): Promise<void> {
+    const payload = {
+      transcription,
+    };
+
+    await this.conversationRepository.updateById(conversationId, payload);
   }
 }
 

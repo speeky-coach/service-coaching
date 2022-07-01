@@ -9,6 +9,7 @@ export type ConversationRepositoryAddData = {
 interface ConversationRepository {
   add(data: ConversationRepositoryAddData): Promise<Conversation>;
   list(): Promise<Conversation[]>;
+  updateById(conversationId: string, payload: Partial<Conversation>): Promise<void>;
 }
 
 export default ConversationRepository;

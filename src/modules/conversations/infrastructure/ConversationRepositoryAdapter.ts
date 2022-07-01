@@ -2,6 +2,7 @@ import Conversation, { ConversationId } from '../domain/Conversation';
 import ConversationRepository, { ConversationRepositoryAddData } from '../domain/ConversationRepository';
 import { mongodbApp } from '../../../framework/mongodb/MongodbApp';
 import WithMetadata from '../../../framework/infrastructure/WithMetadata';
+import { ObjectId } from 'mongodb';
 
 class ConversationRepositoryAdapter implements ConversationRepository {
   private testId: string | null = null;
@@ -53,6 +54,25 @@ class ConversationRepositoryAdapter implements ConversationRepository {
     const result = list.map((item) => ({ ...item, id: item._id.toString() }));
 
     return result as Conversation[];
+  }
+
+  public async updateById(conversationId: string, payload: Partial<Conversation>): Promise<void> {
+    const _payload = {
+      ...payload,
+      updatedAt: new Date(),
+    };
+
+    await mongodbApp
+      .getDb()
+      .collection<Conversation & { _id: ObjectId }>('conversations')
+      .updateOne(
+        {
+          _id: new ObjectId(conversationId),
+        },
+        {
+          $set: _payload,
+        },
+      );
   }
 }
 
