@@ -22,12 +22,12 @@ class ExpressApp {
 
     this.loadRouters(routers);
 
-    this.loadNotFoundError();
+    // this.loadNotFoundError();
 
     this.loadHandleError();
   }
 
-  public loadMiddleware(): void {
+  private loadMiddleware(): void {
     this.app.use(cors());
 
     this.app.use(helmet());
