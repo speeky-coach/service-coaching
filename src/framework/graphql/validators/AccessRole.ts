@@ -10,12 +10,10 @@ function AccessRole(role: string | string[]) {
 
     const roles = Array.isArray(role) ? role : [role];
 
-    descriptor.value = function (root, args, context: Context, info: Info): Promise<any> {
+    descriptor.value = async function (root, args, context: Context, info: Info): Promise<any> {
       if (!roles.includes(context.user.role)) throw new ForbiddenError("User doesn't have access");
 
-      const result = originalResolver.call(this, root, args, context, info);
-
-      return result;
+      return originalResolver.call(this, root, args, context, info);
     };
   };
 }
