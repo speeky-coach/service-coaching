@@ -17,13 +17,25 @@ class ConversationRepositoryAdapter implements ConversationRepository {
     await mongodbApp.getDb().collection('conversations').deleteMany({});
   }
 
-  public setTestId(value: string): void {
+  public setTestId(value: string | null): void {
     this.testId = value;
   }
 
   public async findByTestId(testId: string): Promise<WithMetadata<Conversation> | null> {
     const conversation = await mongodbApp.getDb().collection<WithMetadata<Conversation>>('conversations').findOne({
       'metadata.testId': testId,
+    });
+
+    if (!conversation) return null;
+
+    conversation.id = conversation._id.toString();
+
+    return conversation;
+  }
+
+  public async findByUserId(userId: string): Promise<WithMetadata<Conversation> | null> {
+    const conversation = await mongodbApp.getDb().collection<WithMetadata<Conversation>>('conversations').findOne({
+      userId,
     });
 
     if (!conversation) return null;

@@ -1,26 +1,13 @@
 import { v4 as uuid } from 'uuid';
-import { mongodbApp } from '../../../../../app/server';
 import { rabbitMQApp } from '../../../../../app/server';
 import rabbitmqHttpApi from '../../../../../framework/rabbitmq/rabbitmqHttpApi';
 import ConversationCreated from '../../../domain/events/ConversationCreated';
 import { conversationRepositoryAdapter } from '../../ConversationRepositoryAdapter';
 
-jest.setTimeout(60_000);
-
-describe.skip('ConversationSubscriber::create', () => {
-  beforeAll(async () => {
-    await mongodbApp.connect();
-
-    await rabbitMQApp.connect();
-  });
-
+describe('ConversationSubscriber::create', () => {
   describe('successful suit', () => {
     test('should create a new conversation', async () => {
       /* Given */
-      const testId = uuid();
-      console.log('TestId', testId);
-      conversationRepositoryAdapter.setTestId(testId);
-
       const userId = uuid();
       const filename = uuid();
 
@@ -36,10 +23,10 @@ describe.skip('ConversationSubscriber::create', () => {
         occurredOn: '2022-02-18T03:05:41.772Z' as unknown as Date,
       });
 
-      await new Promise((r) => setTimeout(r, 2000));
+      await new Promise((r) => setTimeout(r, 10_000));
 
       /* Then */
-      const conversationDb = await conversationRepositoryAdapter.findByTestId(testId);
+      const conversationDb = await conversationRepositoryAdapter.findByUserId(userId);
       expect(conversationDb).not.toBeNull();
       expect(conversationDb).toMatchObject({
         userId,

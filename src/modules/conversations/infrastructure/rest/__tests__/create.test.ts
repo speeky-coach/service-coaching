@@ -3,27 +3,26 @@ import { v4 as uuid } from 'uuid';
 import { expressApp } from '../../../../../app/server';
 import BadRequestError from '../../../../../framework/express/errors/BadRequestError';
 import ExpressPresenter from '../../../../../framework/express/ExpressPresenter';
-import { mongodbApp } from '../../../../../app/server';
-import { rabbitMQApp } from '../../../../../app/server';
 import rabbitmqHttpApi from '../../../../../framework/rabbitmq/rabbitmqHttpApi';
 import Conversation from '../../../domain/Conversation';
 import ConversationCreated from '../../../domain/events/ConversationCreated';
 import { conversationRepositoryAdapter } from '../../ConversationRepositoryAdapter';
 
 describe('POST /conversations', () => {
-  beforeAll(async () => {
-    await mongodbApp.connect();
+  let testId: string;
 
-    await rabbitMQApp.connect();
+  beforeEach(() => {
+    testId = uuid();
+    conversationRepositoryAdapter.setTestId(testId);
+  });
+
+  afterEach(() => {
+    conversationRepositoryAdapter.setTestId(null);
   });
 
   describe('successful suit', () => {
     test('should create a new conversation', async () => {
       /* Given */
-      const testId = uuid();
-      console.log('TestId', testId);
-      conversationRepositoryAdapter.setTestId(testId);
-
       const userId = uuid();
       const filename = uuid();
 
@@ -61,10 +60,6 @@ describe('POST /conversations', () => {
   describe('failure suit', () => {
     test('should not create a new conversation, because there is not the filename', async () => {
       /* Given */
-      const testId = uuid();
-      console.log('TestId', testId);
-      conversationRepositoryAdapter.setTestId(testId);
-
       const userId = uuid();
 
       /* When */
@@ -81,10 +76,6 @@ describe('POST /conversations', () => {
 
     test('should not create a new conversation, because there is not the userId', async () => {
       /* Given */
-      const testId = uuid();
-      console.log('TestId', testId);
-      conversationRepositoryAdapter.setTestId(testId);
-
       const filename = uuid();
 
       /* When */

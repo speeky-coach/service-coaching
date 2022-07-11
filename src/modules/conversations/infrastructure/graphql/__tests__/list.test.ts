@@ -1,25 +1,13 @@
 import request from 'supertest';
 import { v4 as uuid } from 'uuid';
 import { expressApp } from '../../../../../app/server';
-import { mongodbApp } from '../../../../../app/server';
-import { rabbitMQApp } from '../../../../../app/server';
 import Conversation from '../../../domain/Conversation';
 import { conversationRepositoryAdapter } from '../../ConversationRepositoryAdapter';
 
 describe('QUERY conversations', () => {
-  beforeAll(async () => {
-    await mongodbApp.connect();
-
-    await rabbitMQApp.connect();
-  });
-
   describe('successful suit', () => {
     test('should create a new conversation', async () => {
       /* Given */
-      const testId = uuid();
-      console.log('TestId', testId);
-      conversationRepositoryAdapter.setTestId(testId);
-
       const conversation1 = await conversationRepositoryAdapter.add({
         userId: uuid(),
         filename: uuid(),
