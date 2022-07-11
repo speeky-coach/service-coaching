@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "test": "cross-env TEST_CONTEXT=all jest --coverage --no-cache --forceExit",
+    "test": "cross-env TEST_CONTEXT=all jest --coverage --runInBand --no-cache --forceExit",
     "dev": "nodemon"
   },
   "author": "Bruce Grover Lee",
@@ -20,6 +20,7 @@
     "express": "^4.18.1",
     "graphql": "^16.5.0",
     "helmet": "^5.1.0",
+    "joi": "^17.6.0",
     "mongodb": "^4.7.0",
     "morgan": "^1.10.0",
     "uuid": "^8.3.2",

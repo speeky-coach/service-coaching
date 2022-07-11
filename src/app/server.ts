@@ -17,4 +17,4 @@ if (process.env.NODE_ENV !== 'test') {
   expressApp.start([rabbitMQApp.connect(), mongodbApp.connect()]);
 }
 
-export { expressApp, rabbitMQApp };
+export { expressApp, rabbitMQApp, mongodbApp };

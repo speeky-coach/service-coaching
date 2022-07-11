@@ -7,6 +7,16 @@ import { ObjectId } from 'mongodb';
 class ConversationRepositoryAdapter implements ConversationRepository {
   private testId: string | null = null;
 
+  public async drop(): Promise<void> {
+    // await mongodbApp.connect();
+
+    // const collections = await mongodbApp.getDb().listCollections({ name: 'conversations' }).toArray();
+
+    // if (collections.length === 0) return;
+
+    await mongodbApp.getDb().collection('conversations').deleteMany({});
+  }
+
   public setTestId(value: string): void {
     this.testId = value;
   }

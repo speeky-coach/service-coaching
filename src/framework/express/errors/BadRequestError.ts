@@ -1,8 +1,9 @@
 import HttpError, { ErrorResponse } from './HttpError';
 
 class BadRequestError extends HttpError {
+  static STATUS_CODE = 400;
   public errorCode: string | number;
-  public statusCode = 400;
+  public statusCode = BadRequestError.STATUS_CODE;
   public errors: ErrorResponse[] | null = null;
 
   constructor(data: string | ErrorResponse[] = 'Bad Request', errorCode?: string | number) {

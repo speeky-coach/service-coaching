@@ -2,7 +2,7 @@
 
 ### Version
 
-`express-core-1.0.0v`
+`express-core-1.0.1v`
 
 ## Plug-in Dependencies
 
@@ -17,9 +17,10 @@
 - cors
 - helmet
 - morgan
+- joi
 
 ```
-npm install express debug body-parser cors helmet morgan
+npm install express debug body-parser cors helmet morgan joi
 ```
 
 ```
