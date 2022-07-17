@@ -1,4 +1,4 @@
-import Express, { Application } from 'express';
+import Express, { Application, NextFunction, Request, Response } from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import debug from 'debug';
@@ -9,16 +9,23 @@ import NotFoundError from './errors/NotFoundError';
 import healthRouter from './healthRouter';
 
 import pkg from '../../../package.json';
+import { AuthenticatedRequest } from './types';
 
 const logger = debug('server:ExpressApp');
+
+type ExpressMiddleware = (
+  request: Request | AuthenticatedRequest,
+  response: Response,
+  next: NextFunction,
+) => Promise<void> | void;
 
 class ExpressApp {
   public app: Application;
 
-  constructor(routers: Express.Router[]) {
+  constructor(routers: Express.Router[], middlewares: ExpressMiddleware[] = []) {
     this.app = Express();
 
-    this.loadMiddleware();
+    this.loadMiddleware(middlewares);
 
     this.loadRouters(routers);
 
@@ -27,7 +34,7 @@ class ExpressApp {
     this.loadHandleError();
   }
 
-  private loadMiddleware(): void {
+  private loadMiddleware(middlewares: ExpressMiddleware[]): void {
     this.app.use(cors());
 
     this.app.use(helmet());
@@ -42,6 +49,10 @@ class ExpressApp {
       res.set('X-service-version', pkg.version);
 
       next();
+    });
+
+    middlewares.forEach((middleware) => {
+      this.app.use(middleware);
     });
   }
 

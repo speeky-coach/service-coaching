@@ -1,18 +1,14 @@
 import { ExpressContext } from 'apollo-server-express';
+import { UserId } from '../domain/types';
+import { AuthenticatedRequest, UserTokenPayload } from '../express/types';
 
 export interface Context {
-  user: {
-    role: string;
-  };
+  user: UserTokenPayload;
 }
 
-async function getContext({ req, res }: ExpressContext): Promise<Context> {
-  const user = {
-    role: 'student',
-  };
-
+async function getContext({ req, res }: ExpressContext & { req: AuthenticatedRequest }): Promise<Context> {
   return {
-    user,
+    user: req.user,
   };
 }
 

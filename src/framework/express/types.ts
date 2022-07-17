@@ -3,6 +3,8 @@ import { UserId } from '../domain/types';
 
 export type UserTokenPayload = {
   id: UserId;
+  email?: string;
+  role?: string;
 };
 
 export type AccessTokenPayload = {
