@@ -16,7 +16,7 @@ async function authMiddleware(request: Request | AuthenticatedRequest, response:
     const user: UserTokenPayload = {
       id: decodedToken.uid,
       email: decodedToken.email,
-      role: 'student',
+      role: decodedToken.role,
     };
 
     (request as AuthenticatedRequest).user = user;

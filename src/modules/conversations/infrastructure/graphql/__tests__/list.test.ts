@@ -1,10 +1,17 @@
 import request from 'supertest';
 import { v4 as uuid } from 'uuid';
 import { expressApp } from '../../../../../app/server';
+import generadeToken from '../../../../../framework/firebase/generadeToken';
 import Conversation from '../../../domain/Conversation';
 import { conversationRepositoryAdapter } from '../../ConversationRepositoryAdapter';
 
 describe('QUERY conversations', () => {
+  let studentToken: string;
+
+  beforeAll(async () => {
+    studentToken = await generadeToken(process.env.FIREBASE_TEST_GENERATE_TOKEN_UID_STUDENT!, { role: 'student' });
+  });
+
   describe('successful suit', () => {
     test('should create a new conversation', async () => {
       /* Given */
@@ -33,7 +40,8 @@ describe('QUERY conversations', () => {
           }
         `,
           variable: {},
-        });
+        })
+        .set('Authorization', `Bearer ${studentToken}`);
 
       /* Then */
       expect(response.status).toEqual(200);

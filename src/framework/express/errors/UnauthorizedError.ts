@@ -1,7 +1,8 @@
 import HttpError from './HttpError';
 
 class UnauthorizedError extends HttpError {
-  statusCode = 401;
+  static STATUS_CODE = 401;
+  statusCode = UnauthorizedError.STATUS_CODE;
 
   constructor(public message: string = 'Not Authorized') {
     super(message);

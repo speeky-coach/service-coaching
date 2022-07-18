@@ -2,7 +2,9 @@ import request from 'supertest';
 import { v4 as uuid } from 'uuid';
 import { expressApp } from '../../../../../app/server';
 import BadRequestError from '../../../../../framework/express/errors/BadRequestError';
+import UnauthorizedError from '../../../../../framework/express/errors/UnauthorizedError';
 import ExpressPresenter from '../../../../../framework/express/ExpressPresenter';
+import generadeToken from '../../../../../framework/firebase/generadeToken';
 import rabbitmqHttpApi from '../../../../../framework/rabbitmq/rabbitmqHttpApi';
 import Conversation from '../../../domain/Conversation';
 import ConversationCreated from '../../../domain/events/ConversationCreated';
@@ -10,6 +12,11 @@ import { conversationRepositoryAdapter } from '../../ConversationRepositoryAdapt
 
 describe('POST /conversations', () => {
   let testId: string;
+  let studentToken: string;
+
+  beforeAll(async () => {
+    studentToken = await generadeToken(process.env.FIREBASE_TEST_GENERATE_TOKEN_UID_STUDENT!, { role: 'student' });
+  });
 
   beforeEach(() => {
     testId = uuid();
@@ -27,10 +34,13 @@ describe('POST /conversations', () => {
       const filename = uuid();
 
       /* When */
-      const response = await request(expressApp.app).post('/conversations').send({
-        userId,
-        filename,
-      });
+      const response = await request(expressApp.app)
+        .post('/conversations')
+        .send({
+          userId,
+          filename,
+        })
+        .set('Authorization', `Bearer ${studentToken}`);
 
       /* Then */
       expect(response.status).toEqual(ExpressPresenter.NEW_ENTITY_HTTP_STATUS_CODE);
@@ -58,7 +68,7 @@ describe('POST /conversations', () => {
   });
 
   describe('failure suit', () => {
-    test('should not create a new conversation, because there is not the filename', async () => {
+    test('should not create a new conversation, because there is not the bearer token', async () => {
       /* Given */
       const userId = uuid();
 
@@ -66,6 +76,22 @@ describe('POST /conversations', () => {
       const response = await request(expressApp.app).post('/conversations').send({
         userId,
       });
+
+      /* Then */
+      expect(response.status).toEqual(UnauthorizedError.STATUS_CODE);
+    });
+
+    test('should not create a new conversation, because there is not the filename', async () => {
+      /* Given */
+      const userId = uuid();
+
+      /* When */
+      const response = await request(expressApp.app)
+        .post('/conversations')
+        .send({
+          userId,
+        })
+        .set('Authorization', `Bearer ${studentToken}`);
 
       /* Then */
       expect(response.status).toEqual(BadRequestError.STATUS_CODE);
@@ -79,9 +105,12 @@ describe('POST /conversations', () => {
       const filename = uuid();
 
       /* When */
-      const response = await request(expressApp.app).post('/conversations').send({
-        filename,
-      });
+      const response = await request(expressApp.app)
+        .post('/conversations')
+        .send({
+          filename,
+        })
+        .set('Authorization', `Bearer ${studentToken}`);
 
       /* Then */
       expect(response.status).toEqual(BadRequestError.STATUS_CODE);
