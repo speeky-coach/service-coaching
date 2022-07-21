@@ -1,7 +1,7 @@
-import Conversation, { ConversationId } from '../domain/Conversation';
+import { WithMetadata } from '@speeky/framework';
+import Conversation from '../domain/Conversation';
 import ConversationRepository, { ConversationRepositoryAddData } from '../domain/ConversationRepository';
-import { mongodbApp } from '../../../framework/mongodb/MongodbApp';
-import WithMetadata from '../../../framework/infrastructure/WithMetadata';
+import { mongodbApp } from '../../../setup/mongodb';
 import { ObjectId } from 'mongodb';
 
 class ConversationRepositoryAdapter implements ConversationRepository {

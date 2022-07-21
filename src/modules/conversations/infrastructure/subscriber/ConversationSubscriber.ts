@@ -1,5 +1,4 @@
-import { UserId } from '../../../../framework/domain/types';
-import DomainEventDTO from '../../../../framework/infrastructure/DomainEventDTO';
+import { UserId, DomainEventDTO } from '@speeky/framework';
 import ConversationApplication, { AddTranscriptionData } from '../../application/ConversationApplication';
 import { Transcription } from '../../domain/Conversation';
 import { ConversationRepositoryAddData } from '../../domain/ConversationRepository';

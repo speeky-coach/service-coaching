@@ -1,4 +1,4 @@
-import EventBus from '../../../framework/domain/bus/EventBus';
+import { EventBus } from '@speeky/framework';
 import Conversation, { Transcription } from '../domain/Conversation';
 import ConversationRepository, { ConversationRepositoryAddData } from '../domain/ConversationRepository';
 import ConversationCreated from '../domain/events/ConversationCreated';

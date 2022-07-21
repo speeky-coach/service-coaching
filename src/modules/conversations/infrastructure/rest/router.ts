@@ -1,6 +1,6 @@
 import express from 'express';
 import Joi from 'joi';
-import validateBody from '../../../../framework/express/validators/validateBody';
+import { validateBody } from '@speeky/framework';
 import ConversationController from './ConversationController';
 
 const conversationController = new ConversationController();

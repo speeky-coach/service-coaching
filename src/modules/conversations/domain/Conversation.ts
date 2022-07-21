@@ -1,4 +1,4 @@
-import { UserId } from '../../../framework/domain/types';
+import { UserId } from '@speeky/framework';
 
 export type ConversationId = string;
 

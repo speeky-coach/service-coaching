@@ -1,9 +1,5 @@
 # Jest App Plug-in
 
-### Version
-
-`jest-core-1.0.0v`
-
 ## Plug-in Dependencies
 
 none

@@ -1,11 +1,13 @@
 import request from 'supertest';
 import { v4 as uuid } from 'uuid';
+import {
+  BadRequestError,
+  UnauthorizedError,
+  ExpressPresenter,
+  generadeToken,
+  rabbitmqHttpApi,
+} from '@speeky/framework';
 import { expressApp } from '../../../../../app/server';
-import BadRequestError from '../../../../../framework/express/errors/BadRequestError';
-import UnauthorizedError from '../../../../../framework/express/errors/UnauthorizedError';
-import ExpressPresenter from '../../../../../framework/express/ExpressPresenter';
-import generadeToken from '../../../../../framework/firebase/generadeToken';
-import rabbitmqHttpApi from '../../../../../framework/rabbitmq/rabbitmqHttpApi';
 import Conversation from '../../../domain/Conversation';
 import ConversationCreated from '../../../domain/events/ConversationCreated';
 import { conversationRepositoryAdapter } from '../../ConversationRepositoryAdapter';

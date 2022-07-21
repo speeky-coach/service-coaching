@@ -1,4 +1,4 @@
-import RabbitMQSubscriber from '../../../../framework/rabbitmq/RabbitMQSubscriber';
+import { RabbitMQSubscriber } from '@speeky/framework';
 import ConversationSubscriber from './ConversationSubscriber';
 
 const subscriber = new RabbitMQSubscriber();

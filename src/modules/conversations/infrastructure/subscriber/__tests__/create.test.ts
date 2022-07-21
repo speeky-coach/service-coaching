@@ -1,6 +1,6 @@
 import { v4 as uuid } from 'uuid';
 import { rabbitMQApp } from '../../../../../app/server';
-import rabbitmqHttpApi from '../../../../../framework/rabbitmq/rabbitmqHttpApi';
+import { rabbitmqHttpApi } from '@speeky/framework';
 import ConversationCreated from '../../../domain/events/ConversationCreated';
 import { conversationRepositoryAdapter } from '../../ConversationRepositoryAdapter';
 

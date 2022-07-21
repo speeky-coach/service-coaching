@@ -1,17 +1,17 @@
 import 'dotenv/config';
-
-import ExpressApp from '../framework/express/ExpressApp';
-import authMiddleware from '../framework/firebase/authMiddleware';
-import GraphQLApp from '../framework/graphql/GraphQLApp';
-import { mongodbApp } from '../framework/mongodb/MongodbApp';
-import { rabbitMQApp } from '../framework/rabbitmq/RabbitMQApp';
+import packageJson from '../../package.json';
+import { ExpressApp, GraphQLApp, authMiddleware } from '@speeky/framework';
+import { mongodbApp } from '../setup/mongodb';
+import { rabbitMQApp } from '../setup/rabbitmq';
+import { resolvers, typeDefs } from '../setup/graphql';
 
 import conversationsModule from '../modules/conversations/module';
 
-const expressApp = new ExpressApp([conversationsModule.router], [authMiddleware]);
-const graphql = new GraphQLApp();
+const expressApp = new ExpressApp([conversationsModule.router], [authMiddleware], packageJson.version);
+const graphql = new GraphQLApp(typeDefs, resolvers);
 
 graphql.connect(expressApp.app);
+
 rabbitMQApp.addSubscriber(conversationsModule.subscriber);
 
 if (process.env.NODE_ENV !== 'test') {

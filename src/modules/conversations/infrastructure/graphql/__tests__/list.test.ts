@@ -1,7 +1,7 @@
 import request from 'supertest';
 import { v4 as uuid } from 'uuid';
 import { expressApp } from '../../../../../app/server';
-import generadeToken from '../../../../../framework/firebase/generadeToken';
+import { generadeToken } from '@speeky/framework';
 import Conversation from '../../../domain/Conversation';
 import { conversationRepositoryAdapter } from '../../ConversationRepositoryAdapter';
 

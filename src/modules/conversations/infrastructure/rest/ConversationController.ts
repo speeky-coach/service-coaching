@@ -1,9 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
-// import { AuthenticatedRequest } from '../../../../framework/express/types';
+import { ExpressPresenter } from '@speeky/framework';
 import ConversationApplication from '../../application/ConversationApplication';
 import { ConversationRepositoryAddData } from '../../domain/ConversationRepository';
 import { conversationApplication } from '../conversationApplication';
-import ExpressPresenter from '../../../../framework/express/ExpressPresenter';
 
 class ConversationController {
   private application: ConversationApplication;

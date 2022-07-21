@@ -1,6 +1,4 @@
-import { Context } from '../../../../framework/graphql/getContext';
-import Info from '../../../../framework/graphql/Info';
-import AccessRole from '../../../../framework/graphql/validators/AccessRole';
+import { AccessRole, Context, Info } from '@speeky/framework';
 import ConversationApplication from '../../application/ConversationApplication';
 import Conversation from '../../domain/Conversation';
 import { conversationApplication } from '../conversationApplication';
