@@ -1,0 +1,19 @@
+version: '3'
+services:
+  development:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: 'speeky_service_coaching'
+    ports:
+      - 4000:4000
+      - 9229:9229
+    volumes:
+      - ./:/usr/local/app
+      - nodeModules:/usr/local/app/node_modules
+    env_file:
+      - .env
+    command: npm run dev
+
+volumes:
+  nodeModules:
