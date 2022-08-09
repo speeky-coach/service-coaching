@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service-coaching-mongo-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: service-coaching-mongo
+  template:
+    metadata:
+      labels:
+        app: service-coaching-mongo
+    spec:
+      volumes:
+        - name: service-coaching-mongo-vol
+          hostPath:
+            path: /Users/brucegroverlee/Development/speeky/volumes/mongo
+            type: Directory
+      containers:
+        - name: service-coaching-mongo
+          image: mongo
+          resources:
+            limits:
+              memory: 256Mi
+              cpu: '1'
+            requests:
+              memory: 128Mi
+              cpu: '0.2'
+          volumeMounts:
+            - mountPath: /data/db
+              name: service-coaching-mongo-vol
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-coaching-mongo-srv
+spec:
+  type: NodePort
+  selector:
+    app: service-coaching-mongo
+  ports:
+    - name: mongo-port
+      protocol: TCP
+      port: 27017
+      targetPort: 27017

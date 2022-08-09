@@ -4,7 +4,9 @@
   "description": "",
   "scripts": {
     "test": "cross-env TEST_CONTEXT=all jest --coverage --runInBand --no-cache --forceExit",
-    "dev": "nodemon"
+    "dev": "nodemon",
+    "build": "tsc",
+    "start": "node dist/src/app/server.js"
   },
   "author": "Bruce Grover Lee",
   "dependencies": {
