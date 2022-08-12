@@ -6,8 +6,13 @@ import { rabbitMQApp } from '../setup/rabbitmq';
 import { resolvers, typeDefs } from '../setup/graphql';
 
 import conversationsModule from '../modules/conversations/module';
+import usersModule from '../modules/users/module';
 
-const expressApp = new ExpressApp([conversationsModule.router], [authMiddleware], packageJson.version);
+const expressApp = new ExpressApp(
+  [conversationsModule.router, usersModule.router],
+  [authMiddleware],
+  packageJson.version,
+);
 const graphql = new GraphQLApp(typeDefs, resolvers);
 
 graphql.connect(expressApp.app);

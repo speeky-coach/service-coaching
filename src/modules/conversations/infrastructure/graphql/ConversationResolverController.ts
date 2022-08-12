@@ -10,7 +10,7 @@ class ConversationResolverController {
     this.application = conversationApplication;
   }
 
-  @AccessRole('student')
+  // @AccessRole('student')
   public async list(root, args, context: Context, info: Info): Promise<Conversation[]> {
     return this.application.list();
   }
