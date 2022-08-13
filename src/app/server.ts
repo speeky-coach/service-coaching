@@ -9,13 +9,13 @@ import conversationsModule from '../modules/conversations/module';
 import usersModule from '../modules/users/module';
 
 const expressApp = new ExpressApp(
-  [conversationsModule.router, usersModule.router],
-  [authMiddleware],
   packageJson.version,
+  [authMiddleware(['/health'])],
+  [conversationsModule.router, usersModule.router],
 );
 const graphql = new GraphQLApp(typeDefs, resolvers);
-
 graphql.connect(expressApp.app);
+expressApp.initErrorManagement();
 
 rabbitMQApp.addSubscriber(conversationsModule.subscriber);
 

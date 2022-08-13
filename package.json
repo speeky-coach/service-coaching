@@ -12,7 +12,7 @@
   "dependencies": {
     "@graphql-tools/load-files": "^6.6.0",
     "@graphql-tools/merge": "^8.3.0",
-    "@speeky/framework": "^1.0.1",
+    "@speeky/framework": "^1.0.2",
     "debug": "^4.3.4",
     "dotenv": "^16.0.1"
   },
