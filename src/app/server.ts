@@ -8,6 +8,8 @@ import { resolvers, typeDefs } from '../setup/graphql';
 import conversationsModule from '../modules/conversations/module';
 import usersModule from '../modules/users/module';
 
+console.log('version', packageJson.version);
+
 const expressApp = new ExpressApp(
   packageJson.version,
   [authMiddleware(['/health'])],
